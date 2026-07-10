@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-10
+
+### Documentation
+
+- Add a "Quick start — demo an MCP server in 2 minutes" section to the top of
+  the README: a client-driven walkthrough (add → verify → ask → remove) using
+  the published Docker Hub image, aimed at someone seeing how an MCP client
+  discovers and calls tools for the first time, plus an HTTP alternative.
+
 ## [0.1.0] - 2026-07-10
 
 ### Added
@@ -20,5 +29,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mitchallen/mcp-hello-server/releases/tag/v0.1.0
