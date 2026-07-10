@@ -17,6 +17,55 @@ Built with **Python**, **[uv](https://docs.astral.sh/uv/)**, **FastMCP**, and
 
 * * *
 
+## Quick start — demo an MCP server in 2 minutes
+
+New to MCP? This is a tiny, safe server for **seeing how an MCP client discovers
+and calls tools**. Every tool is a harmless in-memory lookup, so it's a good
+sandbox. All you need is **[Docker](https://docs.docker.com/get-docker/)** and an
+MCP client — the steps below use **[Claude Code](https://claude.com/claude-code)**
+and the published Docker Hub image (nothing to build or install).
+
+**1. Add the server.** Claude Code launches the container per session and talks
+to it over stdio:
+
+```sh
+claude mcp add hello -- docker run -i --rm -e MCP_TRANSPORT=stdio mitchallen/mcp-hello-server:latest
+```
+
+**2. Confirm it connected:**
+
+```sh
+claude mcp list        # "hello" should report ✔ Connected
+```
+
+**3. Ask in plain language** — Claude discovers the tools and picks one (the tool
+it calls is in parentheses):
+
+- "Is the hello server up? What version is it?" → (`server_info`)
+- "Greet me in French." → (`greet` → **Bonjour!**)
+- "Say hello in Japanese to Alice." → (`greet` → **こんにちは (Konnichiwa), Alice!**)
+- "What languages can you greet in?" → (`server_info`, reads `languages`)
+
+That round trip — the client listing tools, then calling one with arguments and
+getting structured JSON back — *is* MCP. Peek at the tool schemas the client sees
+with `make dev` (the FastMCP Inspector), or read [Tools](#tools) below.
+
+**4. Remove it when you're done:**
+
+```sh
+claude mcp remove hello
+```
+
+> **Prefer HTTP?** Run it as a long-lived server instead:
+> ```sh
+> docker run --rm -p 8000:8000 mitchallen/mcp-hello-server:latest
+> claude mcp add --transport http hello http://localhost:8000/mcp
+> ```
+> See [Using a published image or a remote server](#using-a-published-image-or-a-remote-server)
+> for other clients and the `mcp-remote` bridge.
+
+* * *
+
 ## Tools
 
 | Tool                        | Purpose                                                        |
