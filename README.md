@@ -1,6 +1,6 @@
 # mcp-hello-server
 
-[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=semver&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml)
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml)
 
 A minimal [MCP](https://modelcontextprotocol.io) server built with Python and
 [FastMCP](https://gofastmcp.com) — a good starting point for a new server or a
