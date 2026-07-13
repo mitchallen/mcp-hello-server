@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-13
+
+### Changed
+
+- `make release` now verifies that `CHANGELOG.md` has a `## [X.Y.Z]` section for
+  the version being released **before** it bumps, tags, or pushes anything. The
+  target version is computed with `uv version --dry-run` (no mutation), and the
+  release aborts early with a helpful message if the entry is missing — so a
+  release can no longer be cut with empty auto-generated GitHub Release notes.
+
 ## [0.2.0] - 2026-07-13
 
 ### Changed
@@ -75,7 +85,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.0...v0.1.1
