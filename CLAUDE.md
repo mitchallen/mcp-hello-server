@@ -4,7 +4,8 @@ A minimal MCP server built with **Python / FastMCP** — a good starting point f
 a new server or a demo. It exposes two tools: `server_info` (a health/status
 check) and `greet` (a friendly greeting in one of a handful of languages,
 defaulting to English). Built with **uv**, **FastMCP**, **pytest**, and
-**make**; multi-stage Docker on `python:3.12-slim`. It was scaffolded from the
+**make**; multi-stage Docker on a distroless Chainguard/Wolfi Python base
+(`cgr.dev/chainguard/python`) for a near-zero-CVE image. It was scaffolded from the
 sibling [`random-mcp-server`](../random-mcp-server) by stripping every tool down
 to `server_info` and adding the `greet` demo tool.
 
@@ -33,8 +34,11 @@ to `server_info` and adding the `greet` demo tool.
   optionally, an alias / ISO code in `_ALIASES`). `server_info` reports the
   supported set automatically.
 - **Docker:** the image defaults to HTTP transport (`MCP_TRANSPORT=http`,
-  `HOST=0.0.0.0`, `PORT=8000`) so it's reachable on a published port. Runs as a
-  non-root user.
+  `HOST=0.0.0.0`, `PORT=8000`) so it's reachable on a published port. The base is
+  distroless Chainguard/Wolfi Python (`cgr.dev/chainguard/python`), which already
+  runs as the non-root `nonroot` user (uid 65532) and has no shell / package
+  manager. The venv is built on the matching `-dev` image so its interpreter
+  symlink resolves at runtime. `make scan` should report 0 CRITICAL/HIGH.
 - **Releasing:** `make release` (`BUMP=patch|minor|major`, default patch) bumps
   the version, commits, tags `vX.Y.Z`, and pushes — the tag triggers the GHCR +
   Docker Hub publish workflows. `make release` does **not** touch `CHANGELOG.md`,

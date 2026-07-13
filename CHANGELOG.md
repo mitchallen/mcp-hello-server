@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Switched the Docker base image from `python:3.12-slim-bookworm` (Debian) to a
+  distroless **Chainguard/Wolfi** Python base (`cgr.dev/chainguard/python`). The
+  Debian base carried 4 CRITICAL + 17 HIGH OS-package CVEs with **no upstream
+  fix available** (perl, zlib, sqlite, util-linux, ncurses); the Wolfi image
+  ships those packages away entirely and scans **0 vulnerabilities at every
+  severity**. The venv is built on the matching `-dev` image so its interpreter
+  resolves at runtime; the runtime is smaller (231 MB vs 341 MB) and still runs
+  as a non-root user. The previous `apt-get upgrade` and `useradd` steps are
+  gone (no package manager / already non-root).
+
 ### Security
 
 - Automated container image vulnerability scanning with Trivy. The new

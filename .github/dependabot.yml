@@ -3,7 +3,7 @@ version: 2
 # "stay up to date" half of vulnerability management — image-scan.yml detects
 # vulns, Dependabot opens the PRs that fix them.
 updates:
-  # Base images in the Dockerfile (python:3.12-slim-bookworm, uv builder).
+  # Base images in the Dockerfile (cgr.dev/chainguard/python runtime + -dev builder).
   - package-ecosystem: docker
     directory: "/"
     schedule:
