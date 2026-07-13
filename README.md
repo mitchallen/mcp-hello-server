@@ -1,6 +1,6 @@
 # mcp-hello-server
 
-[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml)
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![Docker image size](https://img.shields.io/docker/image-size/mitchallen/mcp-hello-server/latest?label=image%20size)](https://hub.docker.com/r/mitchallen/mcp-hello-server/tags) [![Docker pulls](https://img.shields.io/docker/pulls/mitchallen/mcp-hello-server?label=pulls)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml) [![image-scan](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml)
 
 A minimal [MCP](https://modelcontextprotocol.io) server built with Python and
 [FastMCP](https://gofastmcp.com) — a good starting point for a new server or a
@@ -242,7 +242,7 @@ claude mcp add hello -- docker run -i --rm -e MCP_TRANSPORT=stdio ghcr.io/mitcha
 claude mcp add hello -- docker run -i --rm -e MCP_TRANSPORT=stdio mitchallen/mcp-hello-server:latest
 ```
 
-(Pin a version like `:0.1.0` in place of `:latest` for a reproducible setup. Add
+(Pin a version like `:0.1.2` in place of `:latest` for a reproducible setup. Add
 `--scope user` to register the server for every project on your machine.)
 
 ### Option B — Long-running container over HTTP (local)
@@ -309,14 +309,27 @@ from two registries:
 The image runs the server over **streamable HTTP** by default (`MCP_TRANSPORT=http`,
 `HOST=0.0.0.0`, `PORT=8000`) so it's reachable on a published port.
 
+It's built on a **distroless [Chainguard/Wolfi](https://images.chainguard.dev/directory/image/python/versions)
+Python base** — no shell or package manager, runs as a non-root user, and scans
+**0 known vulnerabilities**. Every build is gated by a Trivy scan
+(fails on fixable CRITICAL/HIGH) and the published `:latest` is re-scanned daily;
+see [CI / Publish](#ci--publish).
+
 ### Pull and run
 
 ```sh
+# GitHub Container Registry (GHCR)
 docker pull ghcr.io/mitchallen/mcp-hello-server:latest
 docker run --rm -p 8000:8000 --name mcp-hello ghcr.io/mitchallen/mcp-hello-server:latest
+
+# Docker Hub
+docker pull mitchallen/mcp-hello-server:latest
+docker run --rm -p 8000:8000 --name mcp-hello mitchallen/mcp-hello-server:latest
 ```
 
-Then connect an HTTP MCP client to `http://localhost:8000/mcp`.
+Pin a specific release instead of `:latest` for a reproducible setup, e.g.
+`ghcr.io/mitchallen/mcp-hello-server:0.1.2`. Then connect an HTTP MCP client to
+`http://localhost:8000/mcp`.
 
 ### Test a published release with make
 
@@ -330,7 +343,7 @@ make docker-up                 # pull + run ghcr.io/mitchallen latest, detached
 make docker-smoke              # MCP `initialize` handshake — passes if the server responds
 make docker-down               # stop it
 
-make docker-up TAG=0.1.0                         # pin a version
+make docker-up TAG=0.1.2                         # pin a version
 make docker-up REGISTRY=docker.io/mitchallen     # pull from Docker Hub instead
 make docker-up HTTP_PORT=9000                    # publish on a different host port
 ```
