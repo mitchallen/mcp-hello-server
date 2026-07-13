@@ -6,6 +6,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- Automated container image vulnerability scanning with Trivy. The new
+  `image-scan` workflow builds the image and fails the build on **fixable**
+  CRITICAL/HIGH vulnerabilities on every pull request and push to `main`, and
+  the `publish` / `publish-dockerhub` workflows run the same gate **before**
+  pushing so a vulnerable image can't reach GHCR or Docker Hub.
+- Added a `scan-scheduled` workflow that re-scans the published `:latest` image
+  daily and uploads results (all severities, including unfixed) to the GitHub
+  Security tab, catching CVEs disclosed after build time.
+- Added a Dependabot config (`.github/dependabot.yml`) opening weekly update PRs
+  for the Docker base image, GitHub Actions, and Python dependencies, and
+  enabled Dependabot alerts + security updates on the repository.
+
+### Changed
+
+- `make scan` now fails on fixable CRITICAL/HIGH vulnerabilities
+  (`--severity CRITICAL,HIGH --ignore-unfixed --exit-code 1`), matching the CI
+  gate for local parity.
+
 ## [0.1.1] - 2026-07-10
 
 ### Documentation
