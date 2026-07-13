@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-13
+
 ### Changed
 
 - `make release` now creates the matching **GitHub Release** automatically
@@ -73,7 +75,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mitchallen/mcp-hello-server/releases/tag/v0.1.0
