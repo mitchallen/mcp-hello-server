@@ -1,8 +1,9 @@
 name: dependabot-auto-merge
-# Auto-merges Dependabot's GitHub Actions bumps once required CI checks pass.
+# Auto-merges low-risk Dependabot PRs once the required CI checks pass.
 # Native auto-merge waits for the branch-protection checks on main (unit + bdd),
-# so a bump only lands if the workflows still go green. Other ecosystems
-# (docker base image, pip deps) are intentionally left for manual review.
+# so a bump only lands if the workflows still go green. Scope:
+#   - github-actions: all updates (CI-only, low blast radius).
+#   - docker / pip:   minor + patch only — major bumps stay manual for review.
 on: pull_request
 
 permissions:
@@ -18,8 +19,13 @@ jobs:
         id: metadata
         uses: dependabot/fetch-metadata@v2
 
-      - name: Enable auto-merge for GitHub Actions updates
-        if: startsWith(steps.metadata.outputs.package-ecosystem, 'github')
+      - name: Enable auto-merge for in-scope updates
+        if: >-
+          startsWith(steps.metadata.outputs.package-ecosystem, 'github')
+          || ( (steps.metadata.outputs.package-ecosystem == 'docker'
+          || steps.metadata.outputs.package-ecosystem == 'pip')
+          && (steps.metadata.outputs.update-type == 'version-update:semver-minor'
+          || steps.metadata.outputs.update-type == 'version-update:semver-patch') )
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
