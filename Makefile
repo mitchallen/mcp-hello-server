@@ -98,7 +98,10 @@ release:
 	git tag "v$$version"; \
 	git push origin main; \
 	git push origin "v$$version"; \
-	echo "Pushed v$$version — the publish workflows will build and push the images."
+	echo "Creating GitHub release v$$version..."; \
+	notes=$$(awk -v v="$$version" '$$0 ~ "^## \\[" v "\\]" {flag=1; next} flag && /^## \[/ {exit} flag {print}' CHANGELOG.md); \
+	printf '%s\n' "$$notes" | gh release create "v$$version" --title "v$$version" --notes-file - ; \
+	echo "Pushed v$$version and created its GitHub release — the publish workflows will build and push the images."
 
 # Build distributables
 .PHONY: build
