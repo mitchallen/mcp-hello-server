@@ -23,12 +23,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the Docker image
+      - name: Build image for scanning (amd64, into daemon)
+        run: |
+          docker buildx create --use
+          docker buildx build --load -t mcp-hello-server:scan .
+
+      - name: Trivy scan (fail on fixable CRITICAL/HIGH before push)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: mcp-hello-server:scan
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Build and push the Docker image
         run: |
           tag=${GITHUB_REF#refs/tags/}
           tag=${tag:1}
           image=ghcr.io/${GITHUB_REPOSITORY}
-          docker buildx create --use
           docker buildx build --platform linux/amd64,linux/arm64 \
             -t ${image}:${tag} \
             -t ${image}:latest \
