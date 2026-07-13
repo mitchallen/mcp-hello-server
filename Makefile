@@ -89,6 +89,8 @@ release:
 	@test -z "$$(git status --porcelain)" || { echo "Working tree is not clean; commit or stash first."; exit 1; }
 	@branch=$$(git rev-parse --abbrev-ref HEAD); \
 	test "$$branch" = "main" || { echo "Refusing to release from '$$branch'; switch to main."; exit 1; }
+	@next=$$(uv version --bump $(BUMP) --dry-run --short); \
+	grep -qE "^## \[$$next\]" CHANGELOG.md || { echo "CHANGELOG.md has no entry for v$$next — add a '## [$$next] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }
 	@echo "Bumping version ($(BUMP))..."
 	uv version --bump $(BUMP)
 	@version=$$(uv version --short); \
