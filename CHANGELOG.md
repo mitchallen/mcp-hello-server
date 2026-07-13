@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-07-13
+
 ### Changed
 
 - Switched the Docker base image from `python:3.12-slim-bookworm` (Debian) to a
@@ -17,6 +19,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   resolves at runtime; the runtime is smaller (231 MB vs 341 MB) and still runs
   as a non-root user. The previous `apt-get upgrade` and `useradd` steps are
   gone (no package manager / already non-root).
+- `make scan` now fails on fixable CRITICAL/HIGH vulnerabilities
+  (`--severity CRITICAL,HIGH --ignore-unfixed --exit-code 1`), matching the CI
+  gate for local parity.
 
 ### Security
 
@@ -31,12 +36,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added a Dependabot config (`.github/dependabot.yml`) opening weekly update PRs
   for the Docker base image, GitHub Actions, and Python dependencies, and
   enabled Dependabot alerts + security updates on the repository.
-
-### Changed
-
-- `make scan` now fails on fixable CRITICAL/HIGH vulnerabilities
-  (`--severity CRITICAL,HIGH --ignore-unfixed --exit-code 1`), matching the CI
-  gate for local parity.
 
 ## [0.1.1] - 2026-07-10
 
@@ -61,6 +60,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mitchallen/mcp-hello-server/releases/tag/v0.1.0
