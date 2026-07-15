@@ -40,14 +40,25 @@ to `server_info` and adding the `greet` demo tool.
   manager. The venv is built on the matching `-dev` image so its interpreter
   symlink resolves at runtime. `make scan` should report 0 CRITICAL/HIGH.
 - **Releasing:** `make release` (`BUMP=patch|minor|major`, default patch) bumps
-  the version, commits, tags `vX.Y.Z`, and pushes — the tag triggers the GHCR +
-  Docker Hub publish workflows. It then creates the matching **GitHub Release**
+  the version, commits, tags `vX.Y.Z`, and pushes — the tag triggers the GHCR,
+  Docker Hub, **and PyPI** publish workflows (`publish`, `publish-dockerhub`,
+  `publish-pypi`). It then creates the matching **GitHub Release**
   (`gh release create`) using that version's `CHANGELOG.md` section as the notes
-  (extracted with `awk`), so the tag, images, and Release stay in sync — the
-  Releases page previously drifted because the tag was pushed without a Release
-  object. `make release` does **not** touch `CHANGELOG.md`, so add the new
+  (extracted with `awk`), so the tag, images, package, and Release stay in sync —
+  the Releases page previously drifted because the tag was pushed without a
+  Release object. `make release` does **not** touch `CHANGELOG.md`, so add the new
   version's entry (Keep a Changelog format, top of the file) **before** running
   it — the release notes are only as good as that section.
+- **PyPI trusted publishing:** `publish-pypi.yml` uploads to
+  [PyPI](https://pypi.org/project/mcp-hello-server/) via OIDC trusted publishing
+  (no stored token), from the `pypi` GitHub environment. The PyPI Trusted
+  Publisher **must stay constrained to the `pypi` environment** (owner
+  `mitchallen`, repo `mcp-hello-server`, workflow `publish-pypi.yml`). If it's
+  ever reconfigured, don't leave the environment field blank — an unconstrained
+  publisher lets any workflow/environment in the repo publish, and PyPI will nag
+  you to constrain it. Version badges (PyPI, Python) are cached proxy images
+  (shields.io + PyPI's own image cache) and can lag a release by hours — that's
+  cosmetic, not drift; see the badge note in `README.md`.
 
 ## Tools
 
