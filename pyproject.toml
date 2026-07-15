@@ -9,6 +9,17 @@ authors = [
     { name = "Mitch Allen", email = "npm@mitchallen.com" },
 ]
 keywords = ["mcp", "fastmcp", "hello", "greeting", "starter"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
 dependencies = [
     "fastmcp>=2.9.0",
 ]
@@ -16,6 +27,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/mitchallen/mcp-hello-server"
 Repository = "https://github.com/mitchallen/mcp-hello-server"
+Issues = "https://github.com/mitchallen/mcp-hello-server/issues"
 
 [project.scripts]
 mcp-hello-server = "mcp_hello_server.server:main"
@@ -32,6 +44,18 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcp_hello_server"]
+
+# Ship a lean sdist: source, tests, and the key metadata only — keep local
+# tooling (.claude/, CLAUDE.md) and container/CI infra out of the PyPI artifact.
+[tool.hatch.build.targets.sdist]
+include = [
+    "src",
+    "tests",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "pyproject.toml",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -64,6 +64,16 @@ claude mcp remove hello
 > See [Using a published image or a remote server](#using-a-published-image-or-a-remote-server)
 > for other clients and the `mcp-remote` bridge.
 
+> **No Docker?** The server is published to
+> [PyPI](https://pypi.org/p/mcp-hello-server) as `mcp-hello-server`, so you can
+> run it straight from Python:
+> ```sh
+> uvx mcp-hello-server                    # run over stdio, no install
+> # or install it as a tool / into a venv:
+> pipx install mcp-hello-server           # then: mcp-hello-server
+> claude mcp add hello -- uvx mcp-hello-server
+> ```
+
 * * *
 
 ## Tools
@@ -370,10 +380,16 @@ Three kinds of GitHub Actions workflows live in `.github/workflows/`:
   `make docker-test` against the just-published image as a post-publish smoke
   check. The Docker Hub job needs `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN`
   repository secrets and a pre-created `mitchallen/mcp-hello-server` repo.
+- **`publish-pypi`** — also triggered by the `v*` tag (and can be run manually
+  via `workflow_dispatch`). Runs the suite on Python 3.11–3.13, then builds and
+  uploads the sdist + wheel to [PyPI](https://pypi.org/p/mcp-hello-server) using
+  **trusted publishing** (OIDC — no stored token). It needs a matching PyPI
+  publisher configured for this repo, workflow `publish-pypi.yml`, and a `pypi`
+  GitHub environment.
 
 To cut a release, use the `release` target — it bumps `version` in
-`pyproject.toml` (and `uv.lock`), commits, tags, and pushes, which triggers both
-publish workflows:
+`pyproject.toml` (and `uv.lock`), commits, tags, and pushes, which triggers all
+three publish workflows (GHCR, Docker Hub, PyPI):
 
 ```sh
 make release              # patch bump (default)
