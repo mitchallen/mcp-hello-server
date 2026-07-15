@@ -1,6 +1,6 @@
 # mcp-hello-server
 
-[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![Docker image size](https://img.shields.io/docker/image-size/mitchallen/mcp-hello-server/latest?label=image%20size)](https://hub.docker.com/r/mitchallen/mcp-hello-server/tags) [![Docker pulls](https://img.shields.io/docker/pulls/mitchallen/mcp-hello-server?label=pulls)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml) [![image-scan](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml)
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![PyPI](https://img.shields.io/pypi/v/mcp-hello-server?label=pypi)](https://pypi.org/project/mcp-hello-server/) [![Python versions](https://img.shields.io/pypi/pyversions/mcp-hello-server?label=python)](https://pypi.org/project/mcp-hello-server/) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![Docker image size](https://img.shields.io/docker/image-size/mitchallen/mcp-hello-server/latest?label=image%20size)](https://hub.docker.com/r/mitchallen/mcp-hello-server/tags) [![Docker pulls](https://img.shields.io/docker/pulls/mitchallen/mcp-hello-server?label=pulls)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml) [![image-scan](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml)
 
 A minimal [MCP](https://modelcontextprotocol.io) server built with Python and
 [FastMCP](https://gofastmcp.com) — a good starting point for a new server or a
@@ -11,9 +11,14 @@ demo. It exposes just two tools:
   to English. Ask it to "greet in French" and it replies `Bonjour!`.
 
 Built with **Python**, **[uv](https://docs.astral.sh/uv/)**, **FastMCP**, and
-**make**. It was scaffolded from the sibling
-[`random-mcp-server`](../random-mcp-server) by stripping it down to
-`server_info` and adding the `greet` demo tool.
+**make**, and distributed two ways so you can run it however you like:
+
+- **[PyPI package](https://pypi.org/project/mcp-hello-server/)** — `uvx mcp-hello-server` (no Docker, no clone).
+- **[Docker image](https://hub.docker.com/r/mitchallen/mcp-hello-server)** — `docker run mitchallen/mcp-hello-server`.
+
+It was scaffolded from the sibling
+[`random-mcp-server`](https://github.com/mitchallen/random-mcp-server) by
+stripping it down to `server_info` and adding the `greet` demo tool.
 
 * * *
 
@@ -21,14 +26,18 @@ Built with **Python**, **[uv](https://docs.astral.sh/uv/)**, **FastMCP**, and
 
 New to MCP? This is a tiny, safe server for **seeing how an MCP client discovers
 and calls tools**. Every tool is a harmless in-memory lookup, so it's a good
-sandbox. All you need is **[Docker](https://docs.docker.com/get-docker/)** and an
-MCP client — the steps below use **[Claude Code](https://claude.com/claude-code)**
-and the published Docker Hub image (nothing to build or install).
+sandbox. All you need is an MCP client and **either Python or Docker** — the
+steps below use **[Claude Code](https://claude.com/claude-code)** (nothing to
+build or clone).
 
-**1. Add the server.** Claude Code launches the container per session and talks
-to it over stdio:
+**1. Add the server.** Pick whichever runtime you have — Claude Code launches it
+per session and talks to it over stdio:
 
 ```sh
+# Python (no Docker) — runs the PyPI package via uv, downloading it on first use:
+claude mcp add hello -- uvx mcp-hello-server
+
+# …or Docker — runs the published image:
 claude mcp add hello -- docker run -i --rm -e MCP_TRANSPORT=stdio mitchallen/mcp-hello-server:latest
 ```
 
@@ -56,22 +65,21 @@ with `make dev` (the FastMCP Inspector), or read [Tools](#tools) below.
 claude mcp remove hello
 ```
 
-> **Prefer HTTP?** Run it as a long-lived server instead:
+> **Prefer HTTP?** Run it as a long-lived server instead — with Python or Docker:
 > ```sh
-> docker run --rm -p 8000:8000 mitchallen/mcp-hello-server:latest
+> MCP_TRANSPORT=http uvx mcp-hello-server              # Python, serves on :8000
+> # …or: docker run --rm -p 8000:8000 mitchallen/mcp-hello-server:latest
 > claude mcp add --transport http hello http://localhost:8000/mcp
 > ```
 > See [Using a published image or a remote server](#using-a-published-image-or-a-remote-server)
 > for other clients and the `mcp-remote` bridge.
 
-> **No Docker?** The server is published to
-> [PyPI](https://pypi.org/p/mcp-hello-server) as `mcp-hello-server`, so you can
-> run it straight from Python:
+> **Want it installed, not ephemeral?** `uvx` fetches and runs the package
+> without installing it. To keep it on your `PATH`, install the
+> [PyPI package](https://pypi.org/project/mcp-hello-server/) instead:
 > ```sh
-> uvx mcp-hello-server                    # run over stdio, no install
-> # or install it as a tool / into a venv:
-> pipx install mcp-hello-server           # then: mcp-hello-server
-> claude mcp add hello -- uvx mcp-hello-server
+> pipx install mcp-hello-server        # or: pip install mcp-hello-server
+> mcp-hello-server                     # the console script runs the same server
 > ```
 
 * * *
