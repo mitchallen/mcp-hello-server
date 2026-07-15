@@ -1,6 +1,6 @@
 [project]
 name = "mcp-hello-server"
-version = "0.4.0"
+version = "0.4.1"
 description = "A minimal MCP server: a server_info health check and a multilingual greeting tool"
 readme = "README.md"
 requires-python = ">=3.11"
