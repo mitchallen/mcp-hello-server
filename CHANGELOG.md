@@ -6,6 +6,31 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-15
+
+### Added
+
+- **Published to PyPI** as
+  [`mcp-hello-server`](https://pypi.org/project/mcp-hello-server/) — run it with
+  no Docker and no clone via `uvx mcp-hello-server`, or install it with
+  `pipx install mcp-hello-server` / `pip install mcp-hello-server`.
+- `publish-pypi` GitHub Actions workflow: tests on Python 3.11–3.13, then builds
+  and uploads the sdist + wheel via **trusted publishing** (OIDC, no stored
+  token). It fires on the same `v*` tag as the GHCR / Docker Hub publishes, so a
+  single `make release` fans out to all three registries.
+- `LICENSE` file (MIT) — now shipped inside both the sdist and the wheel.
+- Trove `classifiers` and an `Issues` project URL in the package metadata.
+
+### Changed
+
+- README reworked to be **dual-runtime**: the PyPI/`uvx` path and the Docker path
+  are presented as equal first-class options (badges, intro, and quick start),
+  rather than leading with Docker — so PyPI visitors aren't steered into a
+  container they don't need.
+- The sdist now ships a lean source/tests/metadata allowlist (108 KB → 12 KB),
+  excluding local tooling (`.claude/`, `CLAUDE.md`) and the Docker/CI files that
+  the previous build leaked.
+
 ## [0.3.0] - 2026-07-13
 
 ### Changed
