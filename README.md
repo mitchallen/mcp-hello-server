@@ -33,15 +33,16 @@ stripping it down to `server_info` and adding the `greet` demo tool.
 
 New to MCP? This is a tiny, safe server for **seeing how an MCP client discovers
 and calls tools**. Every tool is a harmless in-memory lookup, so it's a good
-sandbox. All you need is an MCP client and **either Python or Docker** — the
-steps below use **[Claude Code](https://claude.com/claude-code)** (nothing to
-build or clone).
+sandbox. All you need is an MCP client and **either [uv](https://docs.astral.sh/uv/getting-started/installation/)
+(which provides `uvx`) or Docker** — the steps below use
+**[Claude Code](https://claude.com/claude-code)** (nothing to build or clone).
 
 **1. Add the server.** Pick whichever runtime you have — Claude Code launches it
 per session and talks to it over stdio:
 
 ```sh
-# Python (no Docker) — runs the PyPI package via uv, downloading it on first use:
+# Python (no Docker) — runs the PyPI package via uvx (needs uv installed),
+# downloading it on first use:
 claude mcp add hello -- uvx mcp-hello-server
 
 # …or Docker — runs the published image:
