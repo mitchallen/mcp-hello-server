@@ -1,13 +1,17 @@
 # mcp-hello-server
 
-[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![PyPI](https://img.shields.io/pypi/v/mcp-hello-server?label=pypi&cacheSeconds=300)](https://pypi.org/project/mcp-hello-server/) [![Python versions](https://img.shields.io/pypi/pyversions/mcp-hello-server?label=python&cacheSeconds=300)](https://pypi.org/project/mcp-hello-server/) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![Docker image size](https://img.shields.io/docker/image-size/mitchallen/mcp-hello-server/latest?label=image%20size)](https://hub.docker.com/r/mitchallen/mcp-hello-server/tags) [![Docker pulls](https://img.shields.io/docker/pulls/mitchallen/mcp-hello-server?label=pulls)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml) [![image-scan](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml)
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/mcp-hello-server?sort=semver&label=version)](https://github.com/mitchallen/mcp-hello-server/tags) [![PyPI](https://img.shields.io/pypi/v/mcp-hello-server?label=pypi&cacheSeconds=300)](https://pypi.org/project/mcp-hello-server/) [![Python versions](https://img.shields.io/pypi/pyversions/mcp-hello-server?label=python&cacheSeconds=300)](https://pypi.org/project/mcp-hello-server/) [![PyPI downloads](https://img.shields.io/pypi/dm/mcp-hello-server?label=downloads&cacheSeconds=3600)](https://pypistats.org/packages/mcp-hello-server) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/mcp-hello-server?sort=date&label=docker%20hub)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![Docker image size](https://img.shields.io/docker/image-size/mitchallen/mcp-hello-server/latest?label=image%20size)](https://hub.docker.com/r/mitchallen/mcp-hello-server/tags) [![Docker pulls](https://img.shields.io/docker/pulls/mitchallen/mcp-hello-server?label=pulls)](https://hub.docker.com/r/mitchallen/mcp-hello-server) [![test](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/test.yml) [![bdd](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/bdd.yml) [![image-scan](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml/badge.svg)](https://github.com/mitchallen/mcp-hello-server/actions/workflows/image-scan.yml)
 
-> **Note:** the version badges above are cached images (shields.io, and PyPI's
-> own image proxy), so they can lag a fresh release by a while — a badge showing
-> an older number doesn't mean an old release. For the authoritative current
-> version, check the **[latest release / tag](https://github.com/mitchallen/mcp-hello-server/releases)**,
+> **Note:** the version and download badges above are cached images (shields.io,
+> and PyPI's own image proxy), so they can lag reality by a while — a version
+> badge showing an older number doesn't mean an old release. For the
+> authoritative current version, check the
+> **[latest release / tag](https://github.com/mitchallen/mcp-hello-server/releases)**,
 > the version heading on the **[PyPI project page](https://pypi.org/project/mcp-hello-server/)** itself,
-> or run the server's `server_info` tool.
+> or run the server's `server_info` tool. The **downloads** badge is PyPI's
+> monthly count via [pypistats.org](https://pypistats.org/packages/mcp-hello-server)
+> (derived from the public BigQuery dataset, not a live PyPI counter), so a
+> brand-new release can read `0`/no-data for a day or two until the batch catches up.
 
 A minimal [MCP](https://modelcontextprotocol.io) server built with Python and
 [FastMCP](https://gofastmcp.com) — a good starting point for a new server or a
