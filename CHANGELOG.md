@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-08-05
+
 ### Changed
 
 - **Releases now go through a PR.** `make release` opens a `release/vX.Y.Z` PR
@@ -179,7 +181,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...v0.1.2
