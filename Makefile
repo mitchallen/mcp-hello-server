@@ -28,7 +28,7 @@ help:
 	@echo "  make inspect      - Print a server summary (name, version, tools) via fastmcp"
 	@echo "  make test         - Run the test suite (pytest)"
 	@echo "  make lock         - Refresh uv.lock"
-	@echo "  make release      - Bump version (BUMP=patch|minor|major), commit, tag, and push"
+	@echo "  make release      - Bump version (BUMP=patch|minor|major) via a release PR, then tag"
 	@echo '  make docs-pr      - Open a docs PR from working-tree changes (m="msg", optional b=branch)'
 	@echo "  make build        - Build the wheel/sdist with uv"
 	@echo "  make docker-build - Build the Docker image locally"
@@ -155,8 +155,9 @@ release:
 
 # Open a docs (or any small) change as a PR instead of pushing to main.
 # Branches off main, commits the current working-tree changes, pushes, and opens
-# a PR via gh so the change lands through CI (unit + bdd) review. `make release`
-# still pushes version bumps to main directly — this is for everything else.
+# a PR via gh so the change lands through CI (unit + bdd + scan) review. Nothing
+# reaches main any other way — protection enforces admins, and `make release`
+# opens its own release PR — so this is the path for everything non-release.
 # Usage:
 #   make docs-pr m="docs: fix the uv prerequisite note"
 #   make docs-pr m="docs: ..." b=docs/custom-branch-name
@@ -175,7 +176,7 @@ docs-pr:
 	printf '%s\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>\n' "$(m)" | git commit -F -; \
 	git push -u origin "$$branch"; \
 	gh pr create --base main --head "$$branch" --title "$(m)" \
-		--body "Docs/small change opened via \`make docs-pr\`. Merge after CI (unit + bdd) is green."; \
+		--body "Docs/small change opened via \`make docs-pr\`. Merge after CI (unit + bdd + scan) is green."; \
 	echo "PR opened for $$branch — merge it once CI passes, then delete the branch."
 
 # Build distributables
