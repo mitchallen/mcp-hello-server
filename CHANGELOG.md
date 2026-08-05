@@ -24,6 +24,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `gh pr checks --watch` fails immediately with "no checks reported" if it is
   called in the gap between opening the PR and the workflows appearing, which
   aborted the first run of this flow.
+- `make release`'s CHANGELOG check now looks on the release branch when resuming
+  rather than always in main's working tree. Once a run has committed the
+  promoted section onto `release/vX.Y.Z`, main no longer has it, so every resume
+  failed the check that the first run had already satisfied.
 
 ### Fixed
 

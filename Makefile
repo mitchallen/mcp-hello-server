@@ -95,6 +95,9 @@ lock:
 #
 # Re-runnable: if a previous run stopped (CI failed, merge declined), running it
 # again resumes the same release/vX.Y.Z branch rather than bumping a second time.
+# The CHANGELOG check follows the section to wherever it lives: main's working
+# tree on a fresh run, but the release branch on a resume — by then the promoted
+# section has been committed onto that branch and is no longer on main.
 #
 # The wait loop before `gh pr checks --watch` is not redundant: --watch fails
 # outright with "no checks reported" if it queries in the gap between the PR
@@ -107,8 +110,6 @@ release:
 	@test -z "$$(git status --porcelain -- ':!CHANGELOG.md')" || { echo "Working tree has changes other than CHANGELOG.md; commit or stash them first."; exit 1; }
 	@branch=$$(git rev-parse --abbrev-ref HEAD); \
 	test "$$branch" = "main" || { echo "Refusing to release from '$$branch'; switch to main."; exit 1; }
-	@next=$$(uv version --bump $(BUMP) --dry-run --short); \
-	grep -qE "^## \[$$next\]" CHANGELOG.md || { echo "CHANGELOG.md has no entry for v$$next — add a '## [$$next] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }
 	@git fetch --quiet origin
 	@version=$$(uv version --bump $(BUMP) --dry-run --short); \
 	rel="release/v$$version"; \
@@ -118,9 +119,13 @@ release:
 		echo "Release PR for v$$version already merged ($$url) — resuming at the tag."; \
 	else \
 		if git ls-remote --exit-code --heads origin "$$rel" >/dev/null 2>&1; then \
+			git show "origin/$$rel:CHANGELOG.md" | grep -qE "^## \[$$version\]" || { \
+				echo "$$rel exists but its CHANGELOG.md has no '## [$$version]' section — add it on that branch and push."; exit 1; }; \
 			echo "Resuming existing branch $$rel (no second version bump)."; \
 			git checkout "$$rel" && git pull --ff-only; \
 		else \
+			grep -qE "^## \[$$version\]" CHANGELOG.md || { \
+				echo "CHANGELOG.md has no entry for v$$version — add a '## [$$version] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }; \
 			echo "Preparing $$rel ..."; \
 			git checkout -b "$$rel"; \
 			uv version --bump $(BUMP); \
