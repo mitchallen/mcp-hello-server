@@ -2,7 +2,7 @@ version: 2
 # Keeps the image and its dependencies patched automatically. This is the
 # "stay up to date" half of vulnerability management — image-scan.yml detects
 # vulns, Dependabot opens the PRs that fix them. Low-risk updates
-# (github-actions; docker/pip minor+patch) are auto-merged once CI passes —
+# (github-actions; docker/uv minor+patch) are auto-merged once CI passes —
 # see .github/workflows/dependabot-auto-merge.yml.
 updates:
   # Base images in the Dockerfile (cgr.dev/chainguard/python runtime + -dev builder).
@@ -21,8 +21,13 @@ updates:
     commit-message:
       prefix: "ci"
 
-  # Python dependencies (pyproject.toml / uv.lock).
-  - package-ecosystem: pip
+  # Python dependencies (pyproject.toml / uv.lock). This must be `uv`, not
+  # `pip`: the pip ecosystem never picked up uv.lock here, so scheduled Python
+  # updates silently never opened a PR — the only Python bump that ever landed
+  # (cryptography 50.0.0, #11) came in as a *security* alert, which detects the
+  # package manager itself and ignores this config. Dependabot's uv ecosystem
+  # reports `uv` to fetch-metadata, so keep dependabot-auto-merge.yml in sync.
+  - package-ecosystem: uv
     directory: "/"
     schedule:
       interval: weekly
