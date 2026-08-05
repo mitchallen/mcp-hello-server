@@ -6,6 +6,36 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-08-05
+
+### Security
+
+- Bumped the transitive `cryptography` dependency from 49.0.0 to 50.0.0, which
+  fixes **CVE-2026-69247** (HIGH): PKCS#7 decryption exposed distinguishable
+  errors and timing when unwrapping a `RecipientInfo`'s `encryptedKey`, usable
+  as a Bleichenbacher oracle. The published image had been failing the
+  `image-scan` Trivy gate on this CVE until the bump landed.
+
+### Fixed
+
+- Dependabot never checked this project's Python dependencies. The config
+  declared `package-ecosystem: pip`, which does not pick up `uv.lock`, so the
+  weekly Python update opened **zero** PRs from the day it was added — every
+  Dependabot PR to date had been `github-actions` or `docker`. The one Python
+  bump that did land arrived as a *security* alert, which detects the package
+  manager itself and ignores the config. Switched the entry to
+  `package-ecosystem: uv`.
+- `dependabot-auto-merge.yml` matched only the `docker` and `pip` ecosystems, so
+  even once uv PRs began arriving they would never auto-merge. Added `uv` to the
+  minor/patch auto-merge allowlist (`pip` kept as a fallback). Major bumps still
+  stay manual.
+
+### Changed
+
+- `fastmcp` 3.4.4 → 3.4.5 — the first Python dependency PR the weekly schedule
+  has ever produced, opened and auto-merged within minutes of the fix above.
+- `github/codeql-action` pinned from `4` to `4.37.4`.
+
 ## [0.4.1] - 2026-07-15
 
 ### Fixed
