@@ -40,15 +40,32 @@ to `server_info` and adding the `greet` demo tool.
   manager. The venv is built on the matching `-dev` image so its interpreter
   symlink resolves at runtime. `make scan` should report 0 CRITICAL/HIGH.
 - **Releasing:** `make release` (`BUMP=patch|minor|major`, default patch) bumps
-  the version, commits, tags `vX.Y.Z`, and pushes — the tag triggers the GHCR,
-  Docker Hub, **and PyPI** publish workflows (`publish`, `publish-dockerhub`,
-  `publish-pypi`). It then creates the matching **GitHub Release**
-  (`gh release create`) using that version's `CHANGELOG.md` section as the notes
-  (extracted with `awk`), so the tag, images, package, and Release stay in sync —
-  the Releases page previously drifted because the tag was pushed without a
-  Release object. `make release` does **not** touch `CHANGELOG.md`, so add the new
-  version's entry (Keep a Changelog format, top of the file) **before** running
-  it — the release notes are only as good as that section.
+  the version and opens a **`release/vX.Y.Z` PR** carrying the bump plus the
+  `CHANGELOG.md` section, waits for main's required checks, merges it, then tags
+  `vX.Y.Z` — the tag triggers the GHCR, Docker Hub, **and PyPI** publish
+  workflows (`publish`, `publish-dockerhub`, `publish-pypi`). It then creates the
+  matching **GitHub Release** (`gh release create`) using that version's
+  `CHANGELOG.md` section as the notes (extracted with `awk`), so the tag, images,
+  package, and Release stay in sync — the Releases page previously drifted
+  because the tag was pushed without a Release object.
+  - Write the new version's `CHANGELOG.md` entry (Keep a Changelog format, top
+    of the file) **before** running it — the release notes are only as good as
+    that section, and the run aborts if the section is missing. You may leave
+    that edit **uncommitted**; it rides along in the release PR. Everything
+    *else* must be committed first.
+  - It **must not** go back to pushing the bump straight to main. That only ever
+    worked because `enforce_admins` was off, so the release commit reached main
+    without running `unit`/`bdd` and the tag was built from an unchecked commit.
+    Branch protection now enforces admins, so a direct push is refused outright.
+  - The target is **re-runnable**: if a run stops (checks failed, merge
+    declined), re-running resumes the existing `release/vX.Y.Z` branch and skips
+    straight to whatever step is left, rather than bumping the version a second
+    time. It also won't re-tag or re-create an existing Release.
+- **Branch protection on `main`:** required checks are `unit`, `bdd`, and `scan`
+  (the Trivy image gate), with **`enforce_admins` on** — nothing reaches main
+  without them, including releases. Because `scan` is required, a newly disclosed
+  *fixable* CRITICAL/HIGH blocks merges until the bump that clears it lands;
+  that's the intended behavior, and Dependabot's `uv` ecosystem opens that bump.
 - **PyPI trusted publishing:** `publish-pypi.yml` uploads to
   [PyPI](https://pypi.org/project/mcp-hello-server/) via OIDC trusted publishing
   (no stored token), from the `pypi` GitHub environment. The PyPI Trusted
