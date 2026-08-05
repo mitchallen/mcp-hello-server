@@ -28,7 +28,7 @@ help:
 	@echo "  make inspect      - Print a server summary (name, version, tools) via fastmcp"
 	@echo "  make test         - Run the test suite (pytest)"
 	@echo "  make lock         - Refresh uv.lock"
-	@echo "  make release      - Bump version (BUMP=patch|minor|major), commit, tag, and push"
+	@echo "  make release      - Bump version (BUMP=patch|minor|major) via a release PR, then tag"
 	@echo '  make docs-pr      - Open a docs PR from working-tree changes (m="msg", optional b=branch)'
 	@echo "  make build        - Build the wheel/sdist with uv"
 	@echo "  make docker-build - Build the Docker image locally"
@@ -82,34 +82,82 @@ test: install
 lock:
 	uv lock
 
-# Bump the version in pyproject.toml (+ uv.lock), commit, tag, and push.
-# The pushed v* tag triggers the publish workflows (GHCR + Docker Hub).
+# Cut a release. The version bump and the CHANGELOG entry reach main through a
+# PR, so main's required checks (unit, bdd, scan) actually run on the release
+# commit; the v* tag is only cut once that PR is merged. Releases used to push
+# straight to main, which worked solely because enforce_admins was off — the
+# bump landed on main untested and the tag was built from an unchecked commit.
 # Override the bump level with BUMP=minor or BUMP=major.
+#
+# CHANGELOG.md may be edited-but-uncommitted when you run this: its new section
+# is carried into the release PR alongside the bump, so the notes and the
+# version land together.
+#
+# Re-runnable: if a previous run stopped (CI failed, merge declined), running it
+# again resumes the same release/vX.Y.Z branch rather than bumping a second time.
 .PHONY: release
 release:
-	@test -z "$$(git status --porcelain)" || { echo "Working tree is not clean; commit or stash first."; exit 1; }
+	@command -v gh >/dev/null || { echo "gh (GitHub CLI) is required — https://cli.github.com/"; exit 1; }
+	@test -z "$$(git status --porcelain -- ':!CHANGELOG.md')" || { echo "Working tree has changes other than CHANGELOG.md; commit or stash them first."; exit 1; }
 	@branch=$$(git rev-parse --abbrev-ref HEAD); \
 	test "$$branch" = "main" || { echo "Refusing to release from '$$branch'; switch to main."; exit 1; }
 	@next=$$(uv version --bump $(BUMP) --dry-run --short); \
 	grep -qE "^## \[$$next\]" CHANGELOG.md || { echo "CHANGELOG.md has no entry for v$$next — add a '## [$$next] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }
-	@echo "Bumping version ($(BUMP))..."
-	uv version --bump $(BUMP)
-	@version=$$(uv version --short); \
-	echo "Releasing v$$version..."; \
-	git add pyproject.toml uv.lock; \
-	git commit -m "Release v$$version"; \
-	git tag "v$$version"; \
-	git push origin main; \
+	@git fetch --quiet origin
+	@version=$$(uv version --bump $(BUMP) --dry-run --short); \
+	rel="release/v$$version"; \
+	state=$$(gh pr list --head "$$rel" --state all --limit 1 --json state --jq '.[0].state // empty'); \
+	url=$$(gh pr list --head "$$rel" --state all --limit 1 --json url --jq '.[0].url // empty'); \
+	if [ "$$state" = "MERGED" ]; then \
+		echo "Release PR for v$$version already merged ($$url) — resuming at the tag."; \
+	else \
+		if git ls-remote --exit-code --heads origin "$$rel" >/dev/null 2>&1; then \
+			echo "Resuming existing branch $$rel (no second version bump)."; \
+			git checkout "$$rel" && git pull --ff-only; \
+		else \
+			echo "Preparing $$rel ..."; \
+			git checkout -b "$$rel"; \
+			uv version --bump $(BUMP); \
+			git add pyproject.toml uv.lock CHANGELOG.md; \
+			git commit -m "Release v$$version"; \
+			git push -u origin "$$rel"; \
+		fi; \
+		if [ -z "$$url" ]; then \
+			url=$$(gh pr create --base main --head "$$rel" --title "Release v$$version" \
+				--body "Version bump + CHANGELOG section for v$$version, opened by \`make release\`. Merging this tags v$$version, which triggers the GHCR, Docker Hub and PyPI publishes."); \
+		fi; \
+		echo "Release PR: $$url"; \
+		git checkout main; \
+		echo "Waiting for the required checks (unit, bdd, scan)..."; \
+		gh pr checks "$$url" --watch --required --fail-fast --interval 15 || { \
+			echo ""; \
+			echo "Required checks did not pass — nothing was tagged and v$$version is NOT released."; \
+			echo "Fix it on $$rel, push, then re-run 'make release' to resume."; \
+			exit 1; }; \
+		gh pr merge "$$url" --squash --delete-branch; \
+	fi; \
+	git checkout main; \
+	git pull --ff-only; \
+	if git rev-parse -q --verify "refs/tags/v$$version" >/dev/null; then \
+		echo "Tag v$$version already exists locally — reusing it."; \
+	else \
+		git tag "v$$version"; \
+	fi; \
 	git push origin "v$$version"; \
-	echo "Creating GitHub release v$$version..."; \
-	notes=$$(awk -v v="$$version" '$$0 ~ "^## \\[" v "\\]" {flag=1; next} flag && /^## \[/ {exit} flag {print}' CHANGELOG.md); \
-	printf '%s\n' "$$notes" | gh release create "v$$version" --title "v$$version" --notes-file - ; \
-	echo "Pushed v$$version and created its GitHub release — the publish workflows will build and push the images."
+	if gh release view "v$$version" >/dev/null 2>&1; then \
+		echo "GitHub release v$$version already exists — leaving it as is."; \
+	else \
+		echo "Creating GitHub release v$$version..."; \
+		notes=$$(awk -v v="$$version" '$$0 ~ "^## \\[" v "\\]" {flag=1; next} flag && /^## \[/ {exit} flag {print}' CHANGELOG.md); \
+		printf '%s\n' "$$notes" | gh release create "v$$version" --title "v$$version" --notes-file - ; \
+	fi; \
+	echo "Released v$$version from a checked commit — the publish workflows will build and push the images."
 
 # Open a docs (or any small) change as a PR instead of pushing to main.
 # Branches off main, commits the current working-tree changes, pushes, and opens
-# a PR via gh so the change lands through CI (unit + bdd) review. `make release`
-# still pushes version bumps to main directly — this is for everything else.
+# a PR via gh so the change lands through CI (unit + bdd + scan) review. Nothing
+# reaches main any other way — protection enforces admins, and `make release`
+# opens its own release PR — so this is the path for everything non-release.
 # Usage:
 #   make docs-pr m="docs: fix the uv prerequisite note"
 #   make docs-pr m="docs: ..." b=docs/custom-branch-name
@@ -128,7 +176,7 @@ docs-pr:
 	printf '%s\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>\n' "$(m)" | git commit -F -; \
 	git push -u origin "$$branch"; \
 	gh pr create --base main --head "$$branch" --title "$(m)" \
-		--body "Docs/small change opened via \`make docs-pr\`. Merge after CI (unit + bdd) is green."; \
+		--body "Docs/small change opened via \`make docs-pr\`. Merge after CI (unit + bdd + scan) is green."; \
 	echo "PR opened for $$branch — merge it once CI passes, then delete the branch."
 
 # Build distributables

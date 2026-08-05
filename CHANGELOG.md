@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Releases now go through a PR.** `make release` opens a `release/vX.Y.Z` PR
+  carrying the version bump and the CHANGELOG section, waits for main's required
+  checks, merges it, and only then cuts the tag. It previously committed the bump
+  straight to main, which succeeded only because branch protection let admins
+  bypass it — so the release commit reached main without running `unit`/`bdd`,
+  and the published tag was built from a commit no check had ever seen. The
+  target is re-runnable: a stopped run resumes its existing release branch
+  instead of bumping the version again.
+- `make release` now accepts an uncommitted `CHANGELOG.md`, carrying that edit
+  into the release PR so the notes and the version land in one commit.
+
+### Fixed
+
+- Branch protection on `main` no longer exempts administrators
+  (`enforce_admins`), closing the bypass that let release commits skip the
+  required checks.
+- The Trivy image scan (`scan`) is now a **required** check alongside `unit` and
+  `bdd`, so a fixable CRITICAL/HIGH can no longer merge to main — previously it
+  only turned main red after the fact, which is how a HIGH-severity cryptography
+  CVE sat on the default branch.
+
 ## [0.4.2] - 2026-08-05
 
 ### Security
