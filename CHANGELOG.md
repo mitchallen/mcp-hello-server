@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-08-05
+
 ### Changed
 
 - **Releases now go through a PR.** `make release` opens a `release/vX.Y.Z` PR
@@ -18,6 +20,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   instead of bumping the version again.
 - `make release` now accepts an uncommitted `CHANGELOG.md`, carrying that edit
   into the release PR so the notes and the version land in one commit.
+- `make release` waits for the PR's check runs to register before watching them.
+  `gh pr checks --watch` fails immediately with "no checks reported" if it is
+  called in the gap between opening the PR and the workflows appearing, which
+  aborted the first run of this flow.
+- `make release`'s CHANGELOG check now looks on the release branch when resuming
+  rather than always in main's working tree. Once a run has committed the
+  promoted section onto `release/vX.Y.Z`, main no longer has it, so every resume
+  failed the check that the first run had already satisfied.
 
 ### Fixed
 
@@ -179,7 +189,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.1.1...v0.1.2

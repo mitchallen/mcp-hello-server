@@ -95,14 +95,21 @@ lock:
 #
 # Re-runnable: if a previous run stopped (CI failed, merge declined), running it
 # again resumes the same release/vX.Y.Z branch rather than bumping a second time.
+# The CHANGELOG check follows the section to wherever it lives: main's working
+# tree on a fresh run, but the release branch on a resume — by then the promoted
+# section has been committed onto that branch and is no longer on main.
+#
+# The wait loop before `gh pr checks --watch` is not redundant: --watch fails
+# outright with "no checks reported" if it queries in the gap between the PR
+# being created and the workflows registering their check runs. Polling on empty
+# *stdout* is what distinguishes that gap from checks that merely haven't
+# finished — gh exits non-zero in both cases, but only prints rows in the latter.
 .PHONY: release
 release:
 	@command -v gh >/dev/null || { echo "gh (GitHub CLI) is required — https://cli.github.com/"; exit 1; }
 	@test -z "$$(git status --porcelain -- ':!CHANGELOG.md')" || { echo "Working tree has changes other than CHANGELOG.md; commit or stash them first."; exit 1; }
 	@branch=$$(git rev-parse --abbrev-ref HEAD); \
 	test "$$branch" = "main" || { echo "Refusing to release from '$$branch'; switch to main."; exit 1; }
-	@next=$$(uv version --bump $(BUMP) --dry-run --short); \
-	grep -qE "^## \[$$next\]" CHANGELOG.md || { echo "CHANGELOG.md has no entry for v$$next — add a '## [$$next] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }
 	@git fetch --quiet origin
 	@version=$$(uv version --bump $(BUMP) --dry-run --short); \
 	rel="release/v$$version"; \
@@ -112,9 +119,13 @@ release:
 		echo "Release PR for v$$version already merged ($$url) — resuming at the tag."; \
 	else \
 		if git ls-remote --exit-code --heads origin "$$rel" >/dev/null 2>&1; then \
+			git show "origin/$$rel:CHANGELOG.md" | grep -qE "^## \[$$version\]" || { \
+				echo "$$rel exists but its CHANGELOG.md has no '## [$$version]' section — add it on that branch and push."; exit 1; }; \
 			echo "Resuming existing branch $$rel (no second version bump)."; \
 			git checkout "$$rel" && git pull --ff-only; \
 		else \
+			grep -qE "^## \[$$version\]" CHANGELOG.md || { \
+				echo "CHANGELOG.md has no entry for v$$version — add a '## [$$version] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }; \
 			echo "Preparing $$rel ..."; \
 			git checkout -b "$$rel"; \
 			uv version --bump $(BUMP); \
@@ -129,6 +140,14 @@ release:
 		echo "Release PR: $$url"; \
 		git checkout main; \
 		echo "Waiting for the required checks (unit, bdd, scan)..."; \
+		tries=0; \
+		until [ -n "$$(gh pr checks "$$url" --required 2>/dev/null)" ]; do \
+			tries=$$((tries + 1)); \
+			if [ "$$tries" -ge 30 ]; then \
+				echo "No checks appeared on $$url after 5 minutes — nothing tagged."; exit 1; \
+			fi; \
+			sleep 10; \
+		done; \
 		gh pr checks "$$url" --watch --required --fail-fast --interval 15 || { \
 			echo ""; \
 			echo "Required checks did not pass — nothing was tagged and v$$version is NOT released."; \
