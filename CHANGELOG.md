@@ -20,6 +20,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   instead of bumping the version again.
 - `make release` now accepts an uncommitted `CHANGELOG.md`, carrying that edit
   into the release PR so the notes and the version land in one commit.
+- `make release` waits for the PR's check runs to register before watching them.
+  `gh pr checks --watch` fails immediately with "no checks reported" if it is
+  called in the gap between opening the PR and the workflows appearing, which
+  aborted the first run of this flow.
 
 ### Fixed
 

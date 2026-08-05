@@ -95,6 +95,12 @@ lock:
 #
 # Re-runnable: if a previous run stopped (CI failed, merge declined), running it
 # again resumes the same release/vX.Y.Z branch rather than bumping a second time.
+#
+# The wait loop before `gh pr checks --watch` is not redundant: --watch fails
+# outright with "no checks reported" if it queries in the gap between the PR
+# being created and the workflows registering their check runs. Polling on empty
+# *stdout* is what distinguishes that gap from checks that merely haven't
+# finished — gh exits non-zero in both cases, but only prints rows in the latter.
 .PHONY: release
 release:
 	@command -v gh >/dev/null || { echo "gh (GitHub CLI) is required — https://cli.github.com/"; exit 1; }
@@ -129,6 +135,14 @@ release:
 		echo "Release PR: $$url"; \
 		git checkout main; \
 		echo "Waiting for the required checks (unit, bdd, scan)..."; \
+		tries=0; \
+		until [ -n "$$(gh pr checks "$$url" --required 2>/dev/null)" ]; do \
+			tries=$$((tries + 1)); \
+			if [ "$$tries" -ge 30 ]; then \
+				echo "No checks appeared on $$url after 5 minutes — nothing tagged."; exit 1; \
+			fi; \
+			sleep 10; \
+		done; \
 		gh pr checks "$$url" --watch --required --fail-fast --interval 15 || { \
 			echo ""; \
 			echo "Required checks did not pass — nothing was tagged and v$$version is NOT released."; \
