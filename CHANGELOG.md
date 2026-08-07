@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-08-06
+
 ### Added
 
 - **Tool annotations.** `server_info` and `greet` now advertise
@@ -196,7 +198,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.0...v0.4.1
