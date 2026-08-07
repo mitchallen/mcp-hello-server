@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-08-06
+
 ### Documentation
 
 - Document the tool annotations in the README: a `Title` column on the tools
@@ -208,7 +210,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.4...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.5...HEAD
+[0.4.5]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.1...v0.4.2
