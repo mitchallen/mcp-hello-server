@@ -98,10 +98,10 @@ claude mcp remove hello
 
 ## Tools
 
-| Tool                        | Purpose                                                        |
-| --------------------------- | ------------------------------------------------------------- |
-| `server_info()`             | Health/status: app name, version, uptime, supported languages |
-| `greet(language?, name?)`   | Greeting in `language` (default English); optional `name`     |
+| Tool                        | Title         | Purpose                                                        |
+| --------------------------- | ------------- | ------------------------------------------------------------- |
+| `server_info()`             | `Server Info` | Health/status: app name, version, uptime, supported languages |
+| `greet(language?, name?)`   | `Greet`       | Greeting in `language` (default English); optional `name`     |
 
 ### `greet`
 
@@ -126,6 +126,31 @@ It returns `{ language, greeting, message }`:
 ```
 
 An unknown language returns an error listing the supported set.
+
+### Annotations
+
+Both tools carry MCP [tool annotations][mcp-annotations] — hints a client can use
+to decide how to present a tool and whether it needs a confirmation prompt:
+
+| Annotation       | Value   | Meaning                                             |
+| ---------------- | ------- | --------------------------------------------------- |
+| `readOnlyHint`   | `true`  | The tool does not modify its environment            |
+| `openWorldHint`  | `false` | It touches no external entities — no network, no disk |
+
+Together these say both tools are safe reads against in-process data, so a client
+can list or auto-approve them without prompting. Each also has a human-readable
+`title` (see the table above) for display in place of the raw function name.
+
+`destructiveHint` and `idempotentHint` are deliberately **not** set: the MCP spec
+defines them as meaningful only when `readOnlyHint` is `false`, so setting them
+on a read-only tool would imply significance they don't carry. A new tool that
+writes state or reaches the network should flip `readOnlyHint`/`openWorldHint`
+and then set them.
+
+Annotations are hints, not a security boundary — a client is free to ignore them,
+and they describe the server's own claims about its tools.
+
+[mcp-annotations]: https://modelcontextprotocol.io/specification/2025-06-18/server/tools#tool-annotations
 
 ### Add a language
 
