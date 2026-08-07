@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Documentation
+
+- Document the tool annotations in the README: a `Title` column on the tools
+  table, and an "Annotations" section covering what `readOnlyHint` /
+  `openWorldHint` mean, why `destructiveHint` / `idempotentHint` are
+  deliberately unset (the spec makes them meaningful only when `readOnlyHint`
+  is `false`), and what a tool that writes state or reaches the network should
+  set instead. Notes that annotations are hints a client may ignore, not a
+  security boundary.
+
 ## [0.4.4] - 2026-08-06
 
 ### Added
