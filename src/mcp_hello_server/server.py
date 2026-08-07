@@ -63,7 +63,14 @@ mcp = FastMCP(
 )
 
 
-@mcp.tool
+# Both tools are pure reads against in-process data, so they carry
+# `readOnlyHint`/`openWorldHint` annotations — clients use these to decide what
+# can run without a confirmation prompt. `destructiveHint`/`idempotentHint` are
+# only meaningful when `readOnlyHint` is false, so they're deliberately omitted.
+@mcp.tool(
+    title="Server Info",
+    annotations={"readOnlyHint": True, "openWorldHint": False},
+)
 def server_info() -> dict[str, Any]:
     """Health/status of the server."""
     return {
@@ -78,7 +85,10 @@ def server_info() -> dict[str, Any]:
     }
 
 
-@mcp.tool
+@mcp.tool(
+    title="Greet",
+    annotations={"readOnlyHint": True, "openWorldHint": False},
+)
 def greet(language: str | None = None, name: str | None = None) -> dict[str, str]:
     """Return a friendly greeting in the requested language (default English).
 

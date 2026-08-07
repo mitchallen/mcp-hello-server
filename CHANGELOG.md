@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Tool annotations.** `server_info` and `greet` now advertise
+  `readOnlyHint: true` / `openWorldHint: false` plus human-readable titles
+  ("Server Info", "Greet"), so MCP clients can present them properly and treat
+  them as safe reads instead of assuming they might have side effects.
+
 ## [0.4.3] - 2026-08-05
 
 ### Changed
