@@ -30,6 +30,11 @@ to `server_info` and adding the `greet` demo tool.
   (streamable HTTP on `PORT`, default 8000), `make dev` (FastMCP Inspector). The
   transport is chosen by `MCP_TRANSPORT` (`stdio` | `http` | `sse`).
 - **Tests:** `make test` → `uv run pytest`.
+- **Adding a tool:** give it a `title` and MCP `annotations`. Both current tools
+  are pure reads (`readOnlyHint: True`, `openWorldHint: False`); a tool that
+  mutates state or reaches the network should flip those and add
+  `destructiveHint`/`idempotentHint`, which are only meaningful when
+  `readOnlyHint` is false.
 - **Adding a language:** add a row to `GREETINGS` in `greetings.py` (and,
   optionally, an alias / ISO code in `_ALIASES`). `server_info` reports the
   supported set automatically.

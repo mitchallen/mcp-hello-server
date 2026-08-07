@@ -29,6 +29,22 @@ def test_tools_are_registered():
     assert names == {"server_info", "greet"}
 
 
+def test_tools_are_annotated_read_only():
+    """Both tools advertise themselves as safe, closed-world reads."""
+
+    async def run():
+        async with Client(server.mcp) as client:
+            return {t.name: t for t in await client.list_tools()}
+
+    tools = asyncio.run(run())
+    assert tools["server_info"].title == "Server Info"
+    assert tools["greet"].title == "Greet"
+    for tool in tools.values():
+        assert tool.annotations is not None
+        assert tool.annotations.readOnlyHint is True
+        assert tool.annotations.openWorldHint is False
+
+
 def test_server_info():
     info = _call("server_info")
     assert info["status"] == "OK"
