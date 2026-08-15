@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- `make release` can now resume a release branch that exists **locally but was
+  never pushed** — the state a run lands in when it dies between `git commit` and
+  `git push` (a dropped network is enough). The resume check only looked for the
+  branch on the remote, so this fell through to the fresh path, failed
+  `git checkout -b` on a branch that already existed, and checked `CHANGELOG.md`
+  against `main`, where the promoted section no longer lives. Cutting v0.4.7 hit
+  exactly this and needed a manual `git push` to recover. The new branch pushes
+  the existing commit and never re-runs the version bump, so a resume cannot
+  double-bump.
+
 ## [0.4.7] - 2026-08-15
 
 ### Documentation
