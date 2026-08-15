@@ -198,7 +198,7 @@ docs-pr:
 	echo "Creating branch $$branch..."; \
 	git checkout -b "$$branch"; \
 	git add -A; \
-	printf '%s\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>\n' "$(m)" | git commit -F -; \
+	printf '%s\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n' "$(m)" | git commit -F -; \
 	git push -u origin "$$branch"; \
 	gh pr create --base main --head "$$branch" --title "$(m)" \
 		--body "Docs/small change opened via \`make docs-pr\`. Merge after CI (unit + bdd + scan) is green."; \
