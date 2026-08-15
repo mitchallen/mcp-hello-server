@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-08-15
+
 ### Changed
 
 - **Pin the Trivy scanner to 0.74.0.** `make scan` ran an unpinned
@@ -219,7 +221,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.5...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.6...HEAD
+[0.4.6]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.2...v0.4.3
