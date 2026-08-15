@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Documentation
+
+- Quick start now covers **Hermes Agent** alongside Claude Code: `hermes mcp add
+  hello --command uvx --args mcp-hello-server` to register the server and
+  `hermes mcp test hello` to check the connection. Hermes takes the command and
+  its arguments as separate flags rather than after a `--` separator.
+
 ## [0.4.6] - 2026-08-15
 
 ### Changed
