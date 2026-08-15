@@ -44,6 +44,19 @@ to `server_info` and adding the `greet` demo tool.
   runs as the non-root `nonroot` user (uid 65532) and has no shell / package
   manager. The venv is built on the matching `-dev` image so its interpreter
   symlink resolves at runtime. `make scan` should report 0 CRITICAL/HIGH.
+- **Trivy version is pinned in two places that must move together.** The
+  Makefile's `TRIVY_VERSION` (used as `aquasec/trivy:$(TRIVY_VERSION)` by
+  `make scan`) and the `version:` input on every `aquasecurity/trivy-action`
+  step (`image-scan.yml` ×2, `publish.yml`, `publish-dockerhub.yml`,
+  `scan-scheduled.yml`). Bump all of them in the same change. **Dependabot
+  covers neither**: its `docker` ecosystem reads the `Dockerfile` only, so it
+  never sees the Makefile tag, and its `github-actions` ecosystem bumps the
+  *action* while the scanner binary inside it stays put — the action's own
+  default lags badly (v0.36.0 still defaults to trivy v0.70.0, which is what CI
+  silently ran until the pin landed). Leaving the Makefile on an unpinned
+  `aquasec/trivy` is worse than a stale pin: local drifts to whatever `:latest`
+  resolves to while CI sits on the action default, so a local pass stops
+  predicting the required `scan` check.
 - **Releasing:** `make release` (`BUMP=patch|minor|major`, default patch) bumps
   the version and opens a **`release/vX.Y.Z` PR** carrying the bump plus the
   `CHANGELOG.md` section, waits for main's required checks, merges it, then tags

@@ -31,6 +31,8 @@ jobs:
       - name: Trivy scan (fail on fixable CRITICAL/HIGH before push)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          # Keep in sync with TRIVY_VERSION in the Makefile — see image-scan.yml.
+          version: v0.74.0
           image-ref: mcp-hello-server:scan
           format: table
           severity: CRITICAL,HIGH
