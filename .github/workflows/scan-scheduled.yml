@@ -17,6 +17,8 @@ jobs:
       - name: Trivy scan of published :latest (SARIF)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          # Keep in sync with TRIVY_VERSION in the Makefile — see image-scan.yml.
+          version: v0.74.0
           image-ref: ghcr.io/mitchallen/mcp-hello-server:latest
           format: sarif
           output: trivy-results.sarif

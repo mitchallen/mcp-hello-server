@@ -31,6 +31,11 @@ jobs:
       - name: Trivy scan (fail on fixable CRITICAL/HIGH)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          # Pin the scanner itself: the action's default `version` lags its own
+          # releases (v0.36.0 defaults to trivy v0.70.0), and Dependabot bumps
+          # only the action, never the binary inside it. Keep in sync with
+          # TRIVY_VERSION in the Makefile so local and CI scans agree.
+          version: v0.74.0
           image-ref: mcp-hello-server:scan
           format: table
           severity: CRITICAL,HIGH
@@ -43,6 +48,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          version: v0.74.0
           image-ref: mcp-hello-server:scan
           format: sarif
           output: trivy-results.sarif

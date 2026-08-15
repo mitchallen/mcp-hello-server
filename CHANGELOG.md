@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Pin the Trivy scanner to 0.74.0.** `make scan` ran an unpinned
+  `aquasec/trivy` (locally cached at 0.72.0) while CI ran v0.70.0 — the default
+  bundled by `aquasecurity/trivy-action@v0.36.0` — so a local scan and the
+  required `scan` check used different scanners. Both now pin 0.74.0, via a
+  `TRIVY_VERSION` variable in the Makefile and a `version:` input on each
+  trivy-action step. No new findings: the image is still 0 CRITICAL/HIGH.
+
 ## [0.4.5] - 2026-08-06
 
 ### Documentation

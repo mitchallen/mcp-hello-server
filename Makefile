@@ -13,6 +13,12 @@ PUBLISHED_IMAGE ?= $(REGISTRY)/mcp-hello-server
 CONTAINER ?= mcp-hello
 HTTP_PORT ?= 8000
 
+# Trivy scanner version for `make scan`. Pinned so a local scan and the CI
+# `scan` gate run the identical scanner — an unpinned :latest drifts, and CI
+# pins the same version via the `version:` input on aquasecurity/trivy-action
+# (the action's own default lags well behind). Bump both together.
+TRIVY_VERSION ?= 0.74.0
+
 # Default target is help
 .PHONY: all
 all: help
@@ -282,7 +288,7 @@ docker-test:
 .PHONY: scan
 scan:
 	@echo "Scanning $(IMAGE) for vulnerabilities (fixable CRITICAL/HIGH fail)..."
-	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy \
+	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:$(TRIVY_VERSION) \
 		image --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 $(IMAGE) \
 		|| { echo "Vulnerabilities found (or image not built — run 'make docker-build')."; exit 1; }
 
