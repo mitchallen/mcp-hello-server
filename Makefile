@@ -105,6 +105,14 @@ lock:
 # tree on a fresh run, but the release branch on a resume — by then the promoted
 # section has been committed onto that branch and is no longer on main.
 #
+# Resume has two shapes, because the branch can exist remotely, locally, or both.
+# A run that dies between `git commit` and a successful `git push` (a dropped
+# network is enough) leaves the branch local-only, which the remote check alone
+# does not see: it would fall through to the fresh path, fail `git checkout -b`
+# on the branch that already exists, and check the CHANGELOG against main, where
+# the promoted section no longer is. So try the remote first, then a local-only
+# branch — which just needs pushing, never a second bump.
+#
 # The wait loop before `gh pr checks --watch` is not redundant: --watch fails
 # outright with "no checks reported" if it queries in the gap between the PR
 # being created and the workflows registering their check runs. Polling on empty
@@ -129,6 +137,12 @@ release:
 				echo "$$rel exists but its CHANGELOG.md has no '## [$$version]' section — add it on that branch and push."; exit 1; }; \
 			echo "Resuming existing branch $$rel (no second version bump)."; \
 			git checkout "$$rel" && git pull --ff-only; \
+		elif git rev-parse -q --verify "refs/heads/$$rel" >/dev/null; then \
+			echo "Resuming local-only branch $$rel — the push never landed (no second version bump)."; \
+			git checkout "$$rel"; \
+			grep -qE "^## \[$$version\]" CHANGELOG.md || { \
+				echo "$$rel exists locally but its CHANGELOG.md has no '## [$$version]' section — add it on that branch, commit, then re-run."; exit 1; }; \
+			git push -u origin "$$rel"; \
 		else \
 			grep -qE "^## \[$$version\]" CHANGELOG.md || { \
 				echo "CHANGELOG.md has no entry for v$$version — add a '## [$$version] - YYYY-MM-DD' section (Keep a Changelog format, top of the file) before releasing."; exit 1; }; \
