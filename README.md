@@ -39,7 +39,8 @@ New to MCP? This is a tiny, safe server for **seeing how an MCP client discovers
 and calls tools**. Every tool is a harmless in-memory lookup, so it's a good
 sandbox. All you need is an MCP client and **either [uv](https://docs.astral.sh/uv/getting-started/installation/)
 (which provides `uvx`) or Docker** — the steps below use
-**[Claude Code](https://claude.com/claude-code)** (nothing to build or clone).
+**[Claude Code](https://claude.com/claude-code)** (nothing to build or clone),
+with the equivalent [Hermes Agent](#hermes-agent) commands at the end.
 
 **1. Add the server.** Pick whichever runtime you have — Claude Code launches it
 per session and talks to it over stdio:
@@ -93,6 +94,29 @@ claude mcp remove hello
 > pipx install mcp-hello-server        # or: pip install mcp-hello-server
 > mcp-hello-server                     # the console script runs the same server
 > ```
+
+### Hermes Agent
+
+[Hermes Agent](https://hermes-agent.nousresearch.com/docs/guides/use-mcp-with-hermes)
+takes the command and its arguments as separate flags rather than after a `--`
+separator. Register the server, then check the connection:
+
+```sh
+hermes mcp add hello --command uvx --args mcp-hello-server
+hermes mcp test hello
+```
+
+As with the Claude Code route above, `uvx` needs [uv](https://docs.astral.sh/uv/getting-started/installation/)
+installed and downloads the [PyPI package](https://pypi.org/project/mcp-hello-server/)
+on first use — nothing to clone or build. Once it connects, the same plain-language
+prompts in step 3 apply; the server is identical, only the client differs.
+
+Hermes also reads MCP servers from its `config.yaml` (`command:`/`args:` for
+stdio, `url:` for an HTTP endpoint like the one in the note above), which is the
+better route for anything beyond a one-liner; run `/reload-mcp` in a session to
+pick up edits. See the
+[Hermes MCP guide](https://hermes-agent.nousresearch.com/docs/guides/use-mcp-with-hermes)
+for the full configuration reference.
 
 * * *
 
