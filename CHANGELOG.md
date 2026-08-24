@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.8] - 2026-08-24
+
 ### Fixed
 
 - `make release` can now resume a release branch that exists **locally but was
@@ -17,6 +19,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   exactly this and needed a manual `git push` to recover. The new branch pushes
   the existing commit and never re-runs the version bump, so a resume cannot
   double-bump.
+
+### Changed
+
+- Bumped `fastmcp` 3.4.6 → 3.4.7 and `github/codeql-action` 4.37.6 → 4.37.7.
+  Both bumps had passed CI since 2026-08-17 but sat unmerged: a GitHub incident
+  that day returned 429/503 while runners downloaded actions, which failed the
+  `auto-merge` job on one PR and the required `scan` check on the other. Re-running
+  the failed jobs cleared both.
 
 ## [0.4.7] - 2026-08-15
 
@@ -249,7 +259,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.7...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.8...HEAD
+[0.4.8]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.4...v0.4.5
