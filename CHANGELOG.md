@@ -6,6 +6,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.9] - 2026-10-12
+
+### Security
+
+- `pyjwt` 2.13.0 → 2.15.0 (#42), which includes security fixes (see the
+  upstream 2.14.0 changelog). It is a transitive dependency of the FastMCP auth
+  stack; the image installs from `uv.lock`, so the fix only reaches users in a
+  published release.
+
+### Changed
+
+- `fastmcp` 3.4.7 → 4.0.10 (#35, #38, #40, #44), which brings `mcp` 1.28.1 →
+  2.2.0 and swaps `httpx`/`httpcore` for `httpx2`/`httpcore2`. Lockfile only —
+  the `pyproject.toml` constraints are unchanged, and the unit and BDD suites
+  pass on the new stack. The published 0.4.8 images still run FastMCP 3.
+- `anyio` 4.14.1 → 4.14.2 (#37).
+- Dev: `pytest-bdd` 8.1.0 → 9.0.0 (#43).
+- CI: `github/codeql-action` 4.37.7 → 4.38.2.
+
 ## [0.4.8] - 2026-08-24
 
 ### Fixed
