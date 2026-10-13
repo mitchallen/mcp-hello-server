@@ -6,9 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.10] - 2026-10-13
+
 ### Changed
 
-- **Fewer Dependabot PRs.** Each ecosystem (`docker`, `github-actions`, `uv`)
+- `fastmcp` 4.0.10 → 4.1.0 (#48), which adds `beartype` as a new transitive
+  dependency. Lockfile only — the unit and BDD suites pass on it.
+- Dev: `mako` 1.3.12 → 1.4.2 (#46), pulled in by `pytest-bdd`; not in the image.
+- CI: `github/codeql-action` 4.38.2 → 4.38.3 (#47).
+- **Fewer Dependabot PRs** (#49). Each ecosystem (`docker`, `github-actions`, `uv`)
   now groups its minor + patch bumps into a single weekly PR, and a 7-day
   `cooldown` skips releases until they have settled — so fast-moving deps like
   `fastmcp` and `github/codeql-action` arrive as one bump to the latest rather
@@ -287,7 +293,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.8...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...HEAD
+[0.4.10]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.9...v0.4.10
+[0.4.9]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.8...v0.4.9
 [0.4.8]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.5...v0.4.6
