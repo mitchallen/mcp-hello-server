@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Fewer Dependabot PRs.** Each ecosystem (`docker`, `github-actions`, `uv`)
+  now groups its minor + patch bumps into a single weekly PR, and a 7-day
+  `cooldown` skips releases until they have settled — so fast-moving deps like
+  `fastmcp` and `github/codeql-action` arrive as one bump to the latest rather
+  than a PR per release. Major bumps still come as individual PRs, and security
+  updates are not delayed by the cooldown.
+
 ## [0.4.9] - 2026-10-12
 
 ### Security
