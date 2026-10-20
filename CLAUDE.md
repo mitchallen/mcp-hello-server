@@ -57,6 +57,11 @@ to `server_info` and adding the `greet` demo tool.
   `aquasec/trivy` is worse than a stale pin: local drifts to whatever `:latest`
   resolves to while CI sits on the action default, so a local pass stops
   predicting the required `scan` check.
+- **The `scan` check also smoke-tests the container:** `image-scan.yml` runs
+  the freshly built image and calls `make docker-smoke` against it (an MCP
+  `initialize` that must return this server's name), so an image that builds
+  but crashes at startup fails the PR. `make docker-test` runs the same check
+  against the *published* image instead.
 - **Releasing:** `make release` (`BUMP=patch|minor|major`, default patch) bumps
   the version and opens a **`release/vX.Y.Z` PR** carrying the bump plus the
   `CHANGELOG.md` section, waits for main's required checks, merges it, then tags
