@@ -122,3 +122,30 @@ Supported languages: `english`, `spanish`, `french`, `german`, `italian`,
   handshake / `fastmcp inspect`.
 - **Absolute import in `server.py`** (`from mcp_hello_server.greetings import …`,
   not `from .greetings`) so the FastMCP CLI can load the file by path.
+
+## Releases — lessons from 2026-10-20
+
+- **Is a release due?** Compare `main` against the latest tag and ignore
+  `.github/` and `*.md` — CI and docs changes don't reach the image. A `uv.lock`
+  change counts when it moves a package in `[project] dependencies` or its
+  transitive tree; the `dev` group doesn't, because the image installs
+  `uv sync --frozen --no-dev`. Dependabot auto-merges land on `main` without a
+  release, so a production bump sits unshipped until someone cuts one.
+- **Release flow:** `make release` opens a `release/vX.Y.Z` PR (version bump +
+  `CHANGELOG.md` section), waits for the required checks and merges it, then
+  tags; the tag also publishes to PyPI. `enforce_admins` is on, so there is no
+  direct-push path.
+- **Publish time:** 3–21 min (v0.4.8–v0.4.10); it varies with the base-image
+  layer cache. Compare against `gh run list --workflow publish.yml` before
+  treating a slow run as hung.
+- **Verify what shipped, not just the green runs.**
+  `docker buildx imagetools inspect <image>:X.Y.Z` on both registries should
+  list `linux/amd64` and `linux/arm64`. Then `make docker-test TAG=X.Y.Z` pulls
+  the *published* image and runs the MCP `initialize` smoke check, and the
+  reply's `serverInfo` should carry the released version (`"version":"X.Y.Z"`).
+- **The required `scan` check now starts the container** (see above), so a PR
+  whose image builds but won't serve MCP is caught before release, not after.
+- **Sibling conventions differ** — release flows, merge styles and Dependabot
+  schedules vary across the eight active repos in `../`. random-server's
+  CLAUDE.md ("Sibling projects") keeps the comparison; check it, or the
+  sibling's own CLAUDE.md, before porting a fix.
