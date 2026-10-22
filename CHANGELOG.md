@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.11] - 2026-10-22
+
+Security rebuild; no code, dependency or behavior changes.
+
+### Security
+
+- Rebuilt on the current `cgr.dev/chainguard/python` base, picking up
+  `ca-certificates-bundle` 20260909-r3, which fixes CVE-2026-111943 (HIGH,
+  man-in-the-middle via untrusted intermediate certificates). Flagged on the
+  published v0.4.10 image by the scheduled Trivy scan on 2026-10-21.
+
 ## [0.4.10] - 2026-10-13
 
 ### Changed
@@ -293,7 +304,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...HEAD
+[0.4.11]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...v0.4.11
 [0.4.10]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.9...v0.4.10
 [0.4.9]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.8...v0.4.9
 [0.4.8]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.7...v0.4.8
