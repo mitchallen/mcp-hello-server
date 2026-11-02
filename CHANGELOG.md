@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.12] - 2026-11-02
+
+Security release; no code changes.
+
+### Security
+
+- `authlib` 1.7.2 → 1.9.2: CVE-2026-96760 (CRITICAL, signature verification
+  bypass), CVE-2026-114615, CVE-2026-114616, CVE-2026-116672 (HIGH).
+- `dnspython` 2.8.0 → 2.9.1: CVE-2026-114605 (HIGH, denial of service).
+- `joserfc` → 1.7.7: CVE-2026-119283 (HIGH, denial of service).
+
+All three are transitive (`fastmcp`, `pydantic[email]`) and were flagged by
+the Trivy `image-scan` on `main`.
+
+### Changed
+
+- deps: Bump fastmcp from 4.1.0 to 4.1.1 in the python-minor-patch group (#54)
+- ci: Bump github/codeql-action from 4.38.3 to 4.39.0 in the actions-minor-patch group (#55)
+- deps: Bump opentelemetry-api from 1.43.0 to 1.45.1 (#57)
+- deps: Bump fastmcp-slim from 4.1.1 to 4.1.2 (#58)
+- ci: weekly auto-release of bot-merged dependency updates (#59)
+- deps: bump authlib, dnspython and joserfc for image-scan CVEs (#60)
+
 ## [0.4.11] - 2026-10-22
 
 Security rebuild; no code, dependency or behavior changes.
@@ -304,7 +327,8 @@ Security rebuild; no code, dependency or behavior changes.
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.12...HEAD
+[0.4.12]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...v0.4.12
 [0.4.11]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...v0.4.11
 [0.4.10]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.9...v0.4.10
 [0.4.9]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.8...v0.4.9
