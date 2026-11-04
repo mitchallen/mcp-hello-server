@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.13] - 2026-11-04
+
+Automated dependency release; no code changes.
+
+### Changed
+
+- ci: bump github/codeql-action from 4.39.0 to 4.39.1 in the actions-minor-patch group (#64)
+- deps: bump fastmcp from 4.1.2 to 4.1.4 in the python-minor-patch group (#65)
+
 ## [0.4.12] - 2026-11-02
 
 Security release; no code changes.
@@ -327,7 +336,8 @@ Security rebuild; no code, dependency or behavior changes.
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.12...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.13...HEAD
+[0.4.13]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.12...v0.4.13
 [0.4.12]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...v0.4.12
 [0.4.11]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...v0.4.11
 [0.4.10]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.9...v0.4.10
