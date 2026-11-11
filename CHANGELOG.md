@@ -6,6 +6,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.14] - 2026-11-11
+
+Automated dependency release; no code changes.
+
+### Changed
+
+- deps: bump the python-minor-patch group with 3 updates (#67)
+
 ## [0.4.13] - 2026-11-04
 
 Automated dependency release; no code changes.
@@ -336,7 +344,8 @@ Security rebuild; no code, dependency or behavior changes.
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.13...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.14...HEAD
+[0.4.14]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.13...v0.4.14
 [0.4.13]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.12...v0.4.13
 [0.4.12]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...v0.4.12
 [0.4.11]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.10...v0.4.11
