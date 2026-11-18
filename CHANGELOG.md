@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.15] - 2026-11-18
+
+Automated dependency release; no code changes.
+
+### Changed
+
+- deps: bump opentelemetry-api from 1.45.1 to 1.45.2 (#69)
+- deps: bump dnspython from 2.9.1 to 2.9.2 (#70)
+- ci: bump github/codeql-action from 4.39.1 to 4.39.3 in the actions-minor-patch group (#71)
+- deps: bump fastmcp from 4.1.5 to 4.1.6 in the python-minor-patch group (#72)
+
 ## [0.4.14] - 2026-11-11
 
 Automated dependency release; no code changes.
@@ -344,7 +355,8 @@ Security rebuild; no code, dependency or behavior changes.
     personalize the message.
 - CI test/bdd workflows and GHCR + Docker Hub publish workflows.
 
-[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.14...HEAD
+[unreleased]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.15...HEAD
+[0.4.15]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.14...v0.4.15
 [0.4.14]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.13...v0.4.14
 [0.4.13]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.12...v0.4.13
 [0.4.12]: https://github.com/mitchallen/mcp-hello-server/compare/v0.4.11...v0.4.12
